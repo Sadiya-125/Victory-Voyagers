@@ -81,7 +81,7 @@ Agro-Sense empowers farmers with intelligent tools to make data-driven decisions
 
 ## 🎥 Demo Videos
 
-- 🔗 _Demo Video_ ()
+- 🔗 _Demo Video_ (https://youtu.be/n4rHbsxk9Q0?feature=shared)
 
 ---
 
