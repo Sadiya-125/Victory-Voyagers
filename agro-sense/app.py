@@ -16,7 +16,7 @@ from utils.disease import disease_dic
 app = Flask(__name__)
 
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'fallback_secret_key')
-co = cohere.Client('9xtb0BFwgzrTgGQIG7QJrdZAUBH8oQoW30EK2Z7I')
+co = cohere.Client('COHERE_API_KEY')
 
 crop_recommendation_model = joblib.load('./models/random_forest_model.pkl')
 label_encoder = joblib.load('./models/label_encoder.pkl')
