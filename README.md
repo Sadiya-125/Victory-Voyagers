@@ -3,7 +3,6 @@
 This repository contains two impactful AI-based solutions aimed at solving real-world problems in _career development_ and _agriculture. Both applications are built with the goal of \*\*bridging opportunity gaps_ and _empowering communities_ using modern technologies.
 
 ---
-
 ## 🚀 Project 1: Sigma AI – AI Career Coach
 
 _Sigma AI_ is an AI-powered career guidance platform built for students and freshers to help them become job-ready. It bridges the gap between academic knowledge and job market expectations by offering intelligent features for personalized career planning.
