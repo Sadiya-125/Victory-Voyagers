@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Agro-Sense - Crop Recommendation System"
+    />
+    <meta name="keywords" content="agriculture, farming, crop recommendation" />
+    <meta name="author" content="Agro-Sense" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <style>
+      :root {
+        --primary-green: #2e7d32;
+        --light-green: #4caf50;
+        --dark-green: #1b5e20;
+        --faded-green: rgba(46, 125, 50, 0.1);
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .navbar {
+        background-color: var(--primary-green) !important;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .navbar-light .navbar-nav .nav-link {
+        color: white !important;
+        font-weight: 500;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+      }
+      .navbar-light .navbar-nav .nav-link:hover {
+        color: #e8f5e9 !important;
+        transform: translateY(-2px);
+      }
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+      }
+      .navbar-brand img {
+        height: 40px;
+        width: auto;
+        filter: none;
+      }
+      .navbar-brand:hover img {
+        transform: scale(1.1);
+      }
+      .form-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+      .form-label {
+        font-weight: 500;
+        color: var(--dark-green);
+      }
+      .form-control {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem 1rem;
+      }
+      .form-control:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+      }
+      .btn-primary {
+        background-color: var(--primary-green);
+        border-color: var(--dark-green);
+        padding: 0.8rem 2rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-radius: 50px;
+      }
+      .btn-primary:hover {
+        background-color: var(--dark-green);
+        border-color: var(--dark-green);
+        transform: translateY(-2px);
+      }
+      .loading {
+        display: none;
+        text-align: center;
+        margin: 2rem 0;
+      }
+      .loading i {
+        color: var(--primary-green);
+        font-size: 2rem;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .result-container {
+        display: none;
+        margin-top: 2rem;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .result-title {
+        color: var(--primary-green);
+        font-weight: 600;
+      }
+    </style>
+
+    <title>Agro-Sense - Crop Recommendation</title>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+          <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="Agro-Sense Logo"
+          />
+          <span class="ms-2 text-white">Agro-Sense</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                href="{{ url_for('crop_recommendation') }}"
+                >Crop Recommendation</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="{{ url_for('fertilizer_recommendation') }}"
+                >Fertilizer Recommendation</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('disease_prediction') }}"
+                >Disease Prediction</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container" style="margin-top: 100px">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="form-container">
+            <h2 class="text-center mb-4">Crop Recommendation</h2>
+            <p class="text-center mb-4">
+              Enter the soil and weather conditions to get crop recommendations
+            </p>
+
+            <form id="cropForm" method="POST" action="/crop_predict">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="N" class="form-label">Nitrogen (N)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    id="N"
+                    name="N"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="P" class="form-label">Phosphorus (P)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    id="P"
+                    name="P"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="K" class="form-label">Potassium (K)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    id="K"
+                    name="K"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="temperature" class="form-label"
+                    >Temperature (°C)</label
+                  >
+                  <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    id="temperature"
+                    name="temperature"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="humidity" class="form-label">Humidity (%)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    id="humidity"
+                    name="humidity"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="ph" class="form-label">pH</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    id="ph"
+                    name="ph"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="rainfall" class="form-label">Rainfall (mm)</label>
+                <input
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  id="rainfall"
+                  name="rainfall"
+                  required
+                />
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" id="fillLocation">
+                  <i class="fas fa-map-marker-alt me-2"></i>Fill Values based on
+                  Location
+                </button>
+                <button type="submit" class="btn btn-primary" id="predictBtn">
+                  <i class="fas fa-seedling me-2"></i>Predict
+                </button>
+              </div>
+            </form>
+
+            <div class="loading" id="loading">
+              <i class="fas fa-spinner"></i>
+              <p class="mt-2">Loading...</p>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+              <h3 class="result-title text-center">🌱 Recommended Crops</h3>
+              <div id="cropReport" class="crop-report mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("cropForm");
+        const fillLocationBtn = document.getElementById("fillLocation");
+        const predictBtn = document.getElementById("predictBtn");
+        const loading = document.getElementById("loading");
+        const resultContainer = document.getElementById("resultContainer");
+        const cropResults = document.getElementById("cropResults");
+
+        fillLocationBtn.addEventListener("click", function () {
+          loading.style.display = "block";
+          resultContainer.style.display = "none";
+
+          fetch("/get_details")
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("temperature").value =
+                (data.weather.temperature_max + data.weather.temperature_min) /
+                2;
+              document.getElementById("humidity").value = data.weather.humidity;
+              document.getElementById("rainfall").value = data.weather.rainfall;
+              document.getElementById("ph").value = data.soil.ph;
+              document.getElementById("N").value = data.soil.nitrogen;
+
+              loading.style.display = "none";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              loading.style.display = "none";
+              alert("Error fetching location data. Please try again.");
+            });
+        });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          loading.style.display = "block";
+          resultContainer.style.display = "none";
+
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+
+          fetch("/crop_predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+                loading.style.display = "none";
+                resultContainer.style.display = "block";            
+                
+                if (data.crop_report) {
+                cropReport.innerHTML = `
+                    <div class="p-3">
+                        ${data.crop_report}
+                    </div>
+                `;
+                } else {
+                cropReport.innerHTML = "";
+                }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              loading.style.display = "none";
+              alert("Error predicting crops. Please try again.");
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
