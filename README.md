@@ -1,4 +1,4 @@
-# 🎯 GDG Solution Challenge – Dual AI-Powered Applications
+# 🎯 GDG Solution Challenge – Dual AI-Powered Application
 
 This repository contains two impactful AI-based solutions aimed at solving real-world problems in _career development_ and _agriculture. Both applications are built with the goal of \*\*bridging opportunity gaps_ and _empowering communities_ using modern technologies.
 
